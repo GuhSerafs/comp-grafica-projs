@@ -11,6 +11,5 @@ build-wasm.bat
 build-wasm.sh
 build.bat
 build.sh
-CMakeLists.txt
 runweb.bat
 runweb.sh
