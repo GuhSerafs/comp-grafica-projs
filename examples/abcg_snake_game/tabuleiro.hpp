@@ -1,36 +1,24 @@
-#ifndef COBRINHA_HPP_
-#define COBRINHA_HPP_
+#ifndef TABULEIRO_HPP_
+#define TABULEIRO_HPP_
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <random>
-#include <list>
 #include "abcg.hpp"
 #include "gamedata.hpp"
 
-enum Direcao {Cima, Baixo, Esquerda, Direita};
-
 // class OpenGLWindow;
-class Cobrinha
+class Tabuleiro
 {
 public: 
     void initializeGL(GLuint program);
     void paintGL(const GameData &gameData);
     void terminateGL();
-
-    // void update(const GameData &gameData, float deltaTime);
     void update(const GameData &gameData);
-    // desenhar();
-    glm::vec2 posicao_cabeca();
-    void avancar(Direcao dir);
-    Direcao direcao_cabeca();
-    glm::vec2 prox_cabeca(Direcao dir);
+    
 private: 
-    // friend OpenGLWindow;
-
-    // Variaveis
-    Direcao direcao;
-    std::list<glm::vec2> corpo;
+    std::vector<glm::vec2> borda;
+    std::uint8_t borda_index{0};
 
     GLuint m_program{};
     GLuint m_vboPositions{};
@@ -39,7 +27,7 @@ private:
     GLuint m_vbo{};
     GLuint m_ebo{};
 
-    const glm::vec3 m_color{0.00f, 1.00f, 0.00f};
+    const glm::vec3 m_color{0.00f, 0.00f, 1.00f}; 
     const float m_scale{0.05f};
     // Vetor de coordenadas dos vertices de um bloquinho
     const std::vector<glm::vec2> vertices{ glm::vec2(-1, -1), 
