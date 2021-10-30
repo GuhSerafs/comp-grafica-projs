@@ -128,12 +128,7 @@ glm::vec2 Cobrinha::posicao_cabeca(){
 }
 
 void Cobrinha::avancar(Direcao dir){
-    if (dir != NULL) {
-        direcao = dir;
-    }
-
     glm::vec2 cabeca_old = corpo.front();
-    
     glm::vec2 novo_bloco;
 
     switch(dir) {
@@ -152,19 +147,22 @@ void Cobrinha::avancar(Direcao dir){
     };
 
     corpo.push_front(novo_bloco);
+    cauda = corpo.back();
     corpo.pop_back();
 }
+
 Direcao Cobrinha::direcao_cabeca(){
     return direcao;
 }
+
 glm::vec2 Cobrinha::prox_cabeca(Direcao dir){
     const glm::vec2 cabeca = posicao_cabeca();
     Direcao direcao_movt = direcao_cabeca();
     glm::vec2 retorno = cabeca;
 
-    if (dir != NULL) {
-        direcao_movt = dir;
-    }
+    // if (dir != NULL) {
+    //     direcao_movt = dir;
+    // }
     
     switch (direcao_movt) {
         case Direcao::Cima: 
@@ -181,4 +179,22 @@ glm::vec2 Cobrinha::prox_cabeca(Direcao dir){
             break;
     }
     return retorno;
+}
+
+void Cobrinha::restaurar_cauda() {
+    corpo.push_back(cauda);
+}
+
+bool Cobrinha::sobrepor_cauda(glm::vec2 posicao_comida){
+    int idx = 0;
+    for(const glm::vec2 bloco: corpo) {
+        if (bloco == posicao_comida)
+            return true;
+        else {
+            idx++;
+            if (idx >= (corpo.size() - 1))
+                break;
+        }
+    }
+    return false;
 }

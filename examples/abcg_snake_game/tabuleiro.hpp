@@ -27,7 +27,12 @@ private:
     GLuint m_vbo{};
     GLuint m_ebo{};
 
-    const glm::vec3 m_color{0.00f, 0.00f, 1.00f}; 
+    const std::vector<glm::vec3> m_color{ glm::vec3(0.00f, 0.27f, 0.39f),
+                                          glm::vec3(0.00f, 0.64f, 0.91f),
+                                          glm::vec3(0.00f, 1.00f, 1.00f),
+                                          glm::vec3(0.00f, 1.00f, 1.00f),
+                                          glm::vec3(0.00f, 0.64f, 0.91f),
+                                          glm::vec3(0.00f, 0.27f, 0.39f)};
     const float m_scale{0.05f};
     // Vetor de coordenadas dos vertices de um bloquinho
     const std::vector<glm::vec2> vertices{ glm::vec2(-1, -1), 
@@ -36,7 +41,7 @@ private:
                                             glm::vec2(1, -1), 
                                             glm::vec2(-1, -1)};
 
-    void desenharQuadrado(glm::vec3 cor);
+    void desenharQuadrado(std::vector<glm::vec3> cor);
     void bloco(glm::vec2 pos);
 };
 #endif

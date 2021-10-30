@@ -27,13 +27,8 @@ void Tabuleiro::initializeGL(GLuint program){
     desenharQuadrado(m_color);
 }
 
-void Tabuleiro::desenharQuadrado(glm::vec3 cor)
+void Tabuleiro::desenharQuadrado(std::vector<glm::vec3> cor)
 {
-  const std::vector<glm::vec3> vetor_cores{cor, cor, cor, cor, cor, cor};
-
-//   for(int i = 0; i<6; i++){
-//     vetor_cores.push_back(cor);
-//   }
   // Release previous resources, if any
   abcg::glDeleteBuffers(1, &m_vboPositions);
   abcg::glDeleteBuffers(1, &m_vboColors);
@@ -49,8 +44,8 @@ void Tabuleiro::desenharQuadrado(glm::vec3 cor)
   // Generate VBO of colors
   abcg::glGenBuffers(1, &m_vboColors);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, m_vboColors);
-  abcg::glBufferData(GL_ARRAY_BUFFER, vetor_cores.size() * sizeof(glm::vec3),
-                     vetor_cores.data(), GL_STATIC_DRAW);
+  abcg::glBufferData(GL_ARRAY_BUFFER, cor.size() * sizeof(glm::vec3),
+                     cor.data(), GL_STATIC_DRAW);
   abcg::glBindBuffer(GL_ARRAY_BUFFER, 0);
 
   // Get location of attributes in the program

@@ -11,6 +11,7 @@
 #include "gamedata.hpp"
 #include "cobrinha.hpp"
 #include "tabuleiro.hpp"
+#include "comida.hpp"
 
 
 class OpenGLWindow : public abcg::OpenGLWindow
@@ -32,6 +33,7 @@ private:
     GameData m_gameData;
     Cobrinha m_cobrinha;
     Tabuleiro m_tabuleiro;
+    Comida m_comida;
 
     int m_delay{100};
     abcg::ElapsedTimer m_elapsedTimer;
@@ -46,7 +48,11 @@ private:
 
     void restart();
     void update();
-    void renderizar();                     
-    void setupModel(int sides);
+
+    void verificarSeComeu();
+    bool verificarSeEstaViva(Direcao dir);
+    void colocarComida();
+    void atualizarCobrinha(Direcao dir);
+
 };
 #endif

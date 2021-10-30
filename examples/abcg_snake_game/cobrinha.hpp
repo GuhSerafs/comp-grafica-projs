@@ -10,27 +10,31 @@
 
 enum Direcao {Cima, Baixo, Esquerda, Direita};
 
-// class OpenGLWindow;
+class OpenGLWindow;
+
 class Cobrinha
 {
 public: 
+    // Funções usadas pela OpenGLWindow
     void initializeGL(GLuint program);
     void paintGL(const GameData &gameData);
     void terminateGL();
-
-    // void update(const GameData &gameData, float deltaTime);
     void update(const GameData &gameData);
-    // desenhar();
+    
+    // Funções da heurística do jogo
     glm::vec2 posicao_cabeca();
     void avancar(Direcao dir);
     Direcao direcao_cabeca();
     glm::vec2 prox_cabeca(Direcao dir);
+    void restaurar_cauda();
+    bool sobrepor_cauda(glm::vec2 posicao_comida);
 private: 
-    // friend OpenGLWindow;
+    friend OpenGLWindow;
 
     // Variaveis
     Direcao direcao;
     std::list<glm::vec2> corpo;
+    glm::vec2 cauda;
 
     GLuint m_program{};
     GLuint m_vboPositions{};

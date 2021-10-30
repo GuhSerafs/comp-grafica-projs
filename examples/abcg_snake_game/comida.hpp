@@ -1,36 +1,26 @@
-#ifndef COBRINHA_HPP_
-#define COBRINHA_HPP_
+#ifndef COMIDA_HPP_
+#define COMIDA_HPP_
 
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
-#include <random>
-#include <list>
+#include <vector>
 #include "abcg.hpp"
 #include "gamedata.hpp"
 
-enum Direcao {Cima, Baixo, Esquerda, Direita};
+class OpenGLWindow;
 
-// class OpenGLWindow;
-class Cobrinha
+class Comida
 {
 public: 
     void initializeGL(GLuint program);
     void paintGL(const GameData &gameData);
     void terminateGL();
-
-    // void update(const GameData &gameData, float deltaTime);
     void update(const GameData &gameData);
-    // desenhar();
-    glm::vec2 posicao_cabeca();
-    void avancar(Direcao dir);
-    Direcao direcao_cabeca();
-    glm::vec2 prox_cabeca(Direcao dir);
 private: 
-    // friend OpenGLWindow;
+    friend OpenGLWindow;
 
     // Variaveis
-    Direcao direcao;
-    std::list<glm::vec2> corpo;
+    glm::vec2 m_posicao_comida{7, 7};
 
     GLuint m_program{};
     GLuint m_vboPositions{};
@@ -47,6 +37,8 @@ private:
                                             glm::vec2(1, 1), 
                                             glm::vec2(1, -1), 
                                             glm::vec2(-1, -1)};
+
+    glm::vec3 m_cor_comida{1.00f, 0.00f, 0.00f};
 
     void desenharQuadrado(glm::vec3 cor);
     void bloco(glm::vec2 pos);
