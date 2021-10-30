@@ -5,9 +5,12 @@
 void Cobrinha::initializeGL(GLuint program){
     terminateGL();
 
+    corpo.clear();
     corpo.push_back(glm::vec2(3+2, 4));
     corpo.push_back(glm::vec2(3+1, 4));
     corpo.push_back(glm::vec2(3, 4));
+
+    direcao = Direita;
 
     m_program = program;
     desenharQuadrado(m_color);
@@ -66,7 +69,7 @@ void Cobrinha::desenharQuadrado(glm::vec3 cor)
   abcg::glBindVertexArray(0);
 }
 
-void Cobrinha::paintGL(const GameData &gameData){
+void Cobrinha::paintGL(){
     for (const glm::vec2 &coord : corpo) {
         bloco(coord);
     }
@@ -102,36 +105,19 @@ void Cobrinha::terminateGL(){
     abcg::glDeleteVertexArrays(1, &m_vao);
 }
 
-void Cobrinha::update(const GameData &gameData){
-    // Logica do update
-    if (gameData.m_input[static_cast<size_t>(Input::Up)]) {
-        avancar(Direcao::Cima);
-        return;
-    }
-    if (gameData.m_input[static_cast<size_t>(Input::Down)]) {
-        avancar(Direcao::Baixo);
-        return;
-    }
-    if (gameData.m_input[static_cast<size_t>(Input::Left)]) {
-        avancar(Direcao::Esquerda);
-        return;
-    }
-    if (gameData.m_input[static_cast<size_t>(Input::Right)]) {
-        avancar(Direcao::Direita);
-        return;
-    }
-    
+void Cobrinha::update(){
+    avancar();
 }
 
 glm::vec2 Cobrinha::posicao_cabeca(){
     return corpo.front();
 }
 
-void Cobrinha::avancar(Direcao dir){
+void Cobrinha::avancar(){
     glm::vec2 cabeca_old = corpo.front();
     glm::vec2 novo_bloco;
 
-    switch(dir) {
+    switch(direcao) {
         case Direcao::Cima: 
             novo_bloco = glm::vec2(cabeca_old.x, cabeca_old.y + 1);
             break;
@@ -151,25 +137,20 @@ void Cobrinha::avancar(Direcao dir){
     corpo.pop_back();
 }
 
-Direcao Cobrinha::direcao_cabeca(){
+Direcao Cobrinha::direcaoCabeca(){
     return direcao;
 }
 
-glm::vec2 Cobrinha::prox_cabeca(Direcao dir){
+glm::vec2 Cobrinha::proxCabeca(){
     const glm::vec2 cabeca = posicao_cabeca();
-    Direcao direcao_movt = direcao_cabeca();
     glm::vec2 retorno = cabeca;
 
-    // if (dir != NULL) {
-    //     direcao_movt = dir;
-    // }
-    
-    switch (direcao_movt) {
+    switch (direcao) {
         case Direcao::Cima: 
-            retorno = glm::vec2(cabeca.x, cabeca.y - 1);
+            retorno = glm::vec2(cabeca.x, cabeca.y + 1);
             break;
         case Direcao::Baixo: 
-            retorno = glm::vec2(cabeca.x, cabeca.y + 1);
+            retorno = glm::vec2(cabeca.x, cabeca.y - 1);
             break;
         case Direcao::Esquerda: 
             retorno = glm::vec2(cabeca.x - 1, cabeca.y);
@@ -181,12 +162,12 @@ glm::vec2 Cobrinha::prox_cabeca(Direcao dir){
     return retorno;
 }
 
-void Cobrinha::restaurar_cauda() {
+void Cobrinha::restaurarCauda() {
     corpo.push_back(cauda);
 }
 
-bool Cobrinha::sobrepor_cauda(glm::vec2 posicao_comida){
-    int idx = 0;
+bool Cobrinha::sobreporCauda(glm::vec2 posicao_comida){
+    unsigned int idx = 0;
     for(const glm::vec2 bloco: corpo) {
         if (bloco == posicao_comida)
             return true;
@@ -197,4 +178,32 @@ bool Cobrinha::sobrepor_cauda(glm::vec2 posicao_comida){
         }
     }
     return false;
+}
+
+Direcao Cobrinha::sentidoOposto() {
+    Direcao d = Direita;
+    switch(direcao) {
+        case Cima: 
+            d = Baixo;
+            break;
+        case Baixo: 
+            d = Cima;
+            break;
+        case Esquerda: 
+            d = Direita;
+            break;
+        case Direita: 
+            d = Esquerda;
+            break;
+    }
+    return d;
+}
+
+void Cobrinha::setDirecao(Direcao dir){
+    // Seta a direcao e tem um debouncer
+    if (dir == sentidoOposto() || 
+        m_elapsedTimer.elapsed() < debouncer / 1000.0)
+        return;
+    m_elapsedTimer.restart();
+    direcao = dir;
 }

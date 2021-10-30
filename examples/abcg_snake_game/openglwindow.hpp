@@ -13,11 +13,10 @@
 #include "tabuleiro.hpp"
 #include "comida.hpp"
 
-
 class OpenGLWindow : public abcg::OpenGLWindow
 {
 protected:
-    void handleEvent(SDL_Event& event) override;
+    void handleEvent(SDL_Event &event) override;
     void initializeGL() override;
     void paintGL() override;
     void paintUI() override;
@@ -35,24 +34,20 @@ private:
     Tabuleiro m_tabuleiro;
     Comida m_comida;
 
-    int m_delay{100};
+    const int m_delay{100};
+    const int m_startup_delay{10};
+
     abcg::ElapsedTimer m_elapsedTimer;
 
-    ImFont* m_font{};
+    ImFont *m_font{};
     std::default_random_engine m_randomEngine;
-
-    GLuint m_vao{};
-    GLuint m_vboPositions{};
-    GLuint m_vboColors{};
-    GLuint m_program{};
 
     void restart();
     void update();
 
     void verificarSeComeu();
-    bool verificarSeEstaViva(Direcao dir);
+    bool verificarSeEstaViva();
     void colocarComida();
-    void atualizarCobrinha(Direcao dir);
-
+    void atualizarCobrinha();
 };
 #endif

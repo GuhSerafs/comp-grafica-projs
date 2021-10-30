@@ -17,24 +17,28 @@ class Cobrinha
 public: 
     // Funções usadas pela OpenGLWindow
     void initializeGL(GLuint program);
-    void paintGL(const GameData &gameData);
+    void paintGL();
     void terminateGL();
-    void update(const GameData &gameData);
+    void update();
     
     // Funções da heurística do jogo
     glm::vec2 posicao_cabeca();
-    void avancar(Direcao dir);
-    Direcao direcao_cabeca();
-    glm::vec2 prox_cabeca(Direcao dir);
-    void restaurar_cauda();
-    bool sobrepor_cauda(glm::vec2 posicao_comida);
+    void avancar();
+    Direcao direcaoCabeca();
+    glm::vec2 proxCabeca();
+    void restaurarCauda();
+    bool sobreporCauda(glm::vec2 posicao_comida);
 private: 
     friend OpenGLWindow;
 
     // Variaveis
     Direcao direcao;
+    Direcao new_direcao;
     std::list<glm::vec2> corpo;
     glm::vec2 cauda;
+    const int debouncer{75};
+
+    abcg::ElapsedTimer m_elapsedTimer;
 
     GLuint m_program{};
     GLuint m_vboPositions{};
@@ -54,5 +58,7 @@ private:
 
     void desenharQuadrado(glm::vec3 cor);
     void bloco(glm::vec2 pos);
+    Direcao sentidoOposto();
+    void setDirecao(Direcao dir);
 };
 #endif

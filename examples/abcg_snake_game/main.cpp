@@ -11,17 +11,13 @@ int main(int argc, char **argv)
 
         // Create OpenGL window
         auto window{std::make_unique<OpenGLWindow>()};
-        window->setOpenGLSettings({
-            .samples = 4,
-            .preserveWebGLDrawingBuffer = true
-        }); 
-        window->setWindowSettings({
-            .width = 500, 
-            .height = 500, 
-            .showFPS = false, 
-            .showFullscreenButton = false, 
-            .title = "Snake Game"
-        });
+        window->setOpenGLSettings({.samples = 4,
+                                   .preserveWebGLDrawingBuffer = true});
+        window->setWindowSettings({.width = 500,
+                                   .height = 500,
+                                   .showFPS = false,
+                                   .showFullscreenButton = false,
+                                   .title = "Snake Game"});
 
         // Run application
         app.run(std::move(window));

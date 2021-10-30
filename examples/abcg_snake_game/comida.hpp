@@ -13,7 +13,7 @@ class Comida
 {
 public: 
     void initializeGL(GLuint program);
-    void paintGL(const GameData &gameData);
+    void paintGL();
     void terminateGL();
     void update(const GameData &gameData);
 private: 
@@ -29,7 +29,7 @@ private:
     GLuint m_vbo{};
     GLuint m_ebo{};
 
-    const glm::vec3 m_color{0.00f, 1.00f, 0.00f};
+    const glm::vec3 m_color{1.00f, 0.00f, 0.00f};
     const float m_scale{0.05f};
     // Vetor de coordenadas dos vertices de um bloquinho
     const std::vector<glm::vec2> vertices{ glm::vec2(-1, -1), 

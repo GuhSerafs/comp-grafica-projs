@@ -57,7 +57,7 @@ void Comida::desenharQuadrado(glm::vec3 cor)
   abcg::glBindVertexArray(0);
 }
 
-void Comida::paintGL(const GameData &gameData){
+void Comida::paintGL(){
     bloco(m_posicao_comida);
 }
 

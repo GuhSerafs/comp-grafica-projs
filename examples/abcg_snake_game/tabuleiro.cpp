@@ -75,7 +75,7 @@ void Tabuleiro::desenharQuadrado(std::vector<glm::vec3> cor)
   abcg::glBindVertexArray(0);
 }
 
-void Tabuleiro::paintGL(const GameData &gameData){
+void Tabuleiro::paintGL(){
     for (int i = 0; i<borda_index; i++){
         bloco(borda.at(i));
     }
@@ -111,6 +111,6 @@ void Tabuleiro::terminateGL(){
     abcg::glDeleteVertexArrays(1, &m_vao);
 }
 
-void Tabuleiro::update(const GameData &gameData){
+void Tabuleiro::update(){
     borda_index++;
 }

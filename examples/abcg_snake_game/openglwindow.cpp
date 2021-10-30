@@ -3,27 +3,27 @@
 #include <cppitertools/itertools.hpp>
 #include "abcg.hpp"
 
-void OpenGLWindow::handleEvent(SDL_Event &event) {
+void OpenGLWindow::handleEvent(SDL_Event &event)
+{
   // Keyboard events
-  if (event.type == SDL_KEYDOWN) {
+  if (event.type == SDL_KEYDOWN)
+  {
     if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_w)
-      m_gameData.m_input.set(static_cast<size_t>(Input::Up));
+    {
+      m_cobrinha.setDirecao(Cima);
+    }
     if (event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_s)
-      m_gameData.m_input.set(static_cast<size_t>(Input::Down));
+    {
+      m_cobrinha.setDirecao(Baixo);
+    }
     if (event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_a)
-      m_gameData.m_input.set(static_cast<size_t>(Input::Left));
+    {
+      m_cobrinha.setDirecao(Esquerda);
+    }
     if (event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d)
-      m_gameData.m_input.set(static_cast<size_t>(Input::Right));
-  }
-  if (event.type == SDL_KEYUP) {
-    if (event.key.keysym.sym == SDLK_UP || event.key.keysym.sym == SDLK_w)
-      m_gameData.m_input.reset(static_cast<size_t>(Input::Up));
-    if (event.key.keysym.sym == SDLK_DOWN || event.key.keysym.sym == SDLK_s)
-      m_gameData.m_input.reset(static_cast<size_t>(Input::Down));
-    if (event.key.keysym.sym == SDLK_LEFT || event.key.keysym.sym == SDLK_a)
-      m_gameData.m_input.reset(static_cast<size_t>(Input::Left));
-    if (event.key.keysym.sym == SDLK_RIGHT || event.key.keysym.sym == SDLK_d)
-      m_gameData.m_input.reset(static_cast<size_t>(Input::Right));
+    {
+      m_cobrinha.setDirecao(Direita);
+    }
   }
 }
 
@@ -33,7 +33,8 @@ void OpenGLWindow::initializeGL()
   ImGuiIO &io{ImGui::GetIO()};
   const auto filename{getAssetsPath() + "Inconsolata-Medium.ttf"};
   m_font = io.Fonts->AddFontFromFileTTF(filename.c_str(), 60.0f);
-  if (m_font == nullptr) {
+  if (m_font == nullptr)
+  {
     throw abcg::Exception{abcg::Exception::Runtime("Cannot load font file")};
   }
 
@@ -54,43 +55,53 @@ void OpenGLWindow::initializeGL()
   restart();
 }
 
-void OpenGLWindow::restart() {
+void OpenGLWindow::restart()
+{
   m_gameData.m_state = State::Starting;
   m_gameData.tabuleiro_index = 0;
+  m_gameData.comida_existe = false;
+  m_gameData.coord_comida = glm::vec2(7, 7);
 
   m_cobrinha.initializeGL(m_objectsProgram);
   m_tabuleiro.initializeGL(m_objectsProgram);
+  m_comida.initializeGL(m_objectsProgram);
 }
 
-void OpenGLWindow::update() {
-  // const float deltaTime{static_cast<float>(getDeltaTime())};
-
+void OpenGLWindow::update()
+{
   // Wait 5 seconds before restarting
-  if ((m_gameData.m_state == State::Win || 
-      m_gameData.m_state == State::GameOver) &&
-      m_elapsedTimer.elapsed() > 5) {
+  if ((m_gameData.m_state == State::Win ||
+       m_gameData.m_state == State::GameOver) &&
+      m_elapsedTimer.elapsed() > 2)
+  {
     restart();
     return;
   }
-  if (m_gameData.m_state == State::Starting) {
-    if (m_elapsedTimer.elapsed() < m_delay / 1000.0) {
+  if (m_gameData.m_state == State::Starting)
+  {
+    if (m_elapsedTimer.elapsed() < m_startup_delay / 1000.0)
+    {
       return;
     }
     m_elapsedTimer.restart();
-    m_tabuleiro.update(m_gameData);
+    m_tabuleiro.update();
     m_gameData.tabuleiro_index++;
-    if(m_gameData.tabuleiro_index >= 76)
+    if (m_gameData.tabuleiro_index >= 76)
       m_gameData.m_state = State::Playing;
-  } 
+  }
 
-  if (m_gameData.m_state == State::Playing) {
-    if (m_elapsedTimer.elapsed() < m_delay / 1000.0) {
+  if (m_gameData.m_state == State::Playing)
+  {
+    if (m_elapsedTimer.elapsed() < m_delay / 1000.0)
+    {
       return;
     }
     m_elapsedTimer.restart();
-    m_cobrinha.update(m_gameData);
-  } 
-  
+    if (!m_gameData.comida_existe)
+      colocarComida();
+    atualizarCobrinha();
+    m_comida.update(m_gameData);
+  }
 
   // if (m_gameData.m_state == State::Playing) {
   //   checkCollisions();
@@ -98,22 +109,28 @@ void OpenGLWindow::update() {
   // }
 }
 
-void OpenGLWindow::paintGL() {
+void OpenGLWindow::paintGL()
+{
   update();
 
   abcg::glClear(GL_COLOR_BUFFER_BIT);
   abcg::glViewport(0, 0, m_viewportWidth, m_viewportHeight);
 
-  if (m_gameData.m_state == State::Starting) {
-    m_tabuleiro.paintGL(m_gameData);
-  } else {
-    m_cobrinha.paintGL(m_gameData);
-    m_tabuleiro.paintGL(m_gameData);
+  if (m_gameData.m_state == State::Starting)
+  {
+    m_tabuleiro.paintGL();
   }
-  
+  else
+  {
+    m_cobrinha.paintGL();
+    m_tabuleiro.paintGL();
+    if (m_gameData.comida_existe)
+      m_comida.paintGL();
+  }
 }
 
-void OpenGLWindow::paintUI() {
+void OpenGLWindow::paintUI()
+{
   abcg::OpenGLWindow::paintUI();
 
   {
@@ -128,9 +145,12 @@ void OpenGLWindow::paintUI() {
     ImGui::Begin(" ", nullptr, flags);
     ImGui::PushFont(m_font);
 
-    if (m_gameData.m_state == State::GameOver) {
+    if (m_gameData.m_state == State::GameOver)
+    {
       ImGui::Text("Game Over!");
-    } else if (m_gameData.m_state == State::Win) {
+    }
+    else if (m_gameData.m_state == State::Win)
+    {
       ImGui::Text("*You Win!*");
     }
 
@@ -153,28 +173,34 @@ void OpenGLWindow::terminateGL()
   m_cobrinha.terminateGL();
 }
 
-void OpenGLWindow::verificarSeComeu(){
+void OpenGLWindow::verificarSeComeu()
+{
   glm::vec2 cabeca = m_cobrinha.posicao_cabeca();
-  if (m_gameData.comida_existe && m_gameData.coord_comida == cabeca){
+  if (m_gameData.comida_existe && m_gameData.coord_comida == cabeca)
+  {
     m_gameData.comida_existe = false;
-    m_cobrinha.restaurar_cauda();
+    m_cobrinha.restaurarCauda();
   }
 }
-bool OpenGLWindow::verificarSeEstaViva(Direcao dir){
-  glm::vec2 prox_coord = m_cobrinha.prox_cabeca(dir);
-  if (m_cobrinha.sobrepor_cauda(prox_coord)) {
+bool OpenGLWindow::verificarSeEstaViva()
+{
+  glm::vec2 prox_coord = m_cobrinha.proxCabeca();
+  if (m_cobrinha.sobreporCauda(prox_coord))
+  {
     return false;
   }
-  return (prox_coord.x > 0 && prox_coord.y > 0 && prox_coord.x < 20 && prox_coord.y < 20);
+  return (prox_coord.x > 0 && prox_coord.y > 0 && prox_coord.x < 19 && prox_coord.y < 19);
 }
-void OpenGLWindow::colocarComida(){
+void OpenGLWindow::colocarComida()
+{
   // Randomly choose a triangle vertex index
-  std::uniform_int_distribution<int> intDistribution(1, 19);
+  std::uniform_int_distribution<int> intDistribution(1, 18);
   int x{intDistribution(m_randomEngine)};
   int y{intDistribution(m_randomEngine)};
 
   glm::vec2 nova_comida{x, y};
-  while (m_cobrinha.sobrepor_cauda(nova_comida)){
+  while (m_cobrinha.sobreporCauda(nova_comida))
+  {
     nova_comida.x = intDistribution(m_randomEngine);
     nova_comida.y = intDistribution(m_randomEngine);
   }
@@ -182,11 +208,15 @@ void OpenGLWindow::colocarComida(){
   m_gameData.coord_comida = nova_comida;
   m_gameData.comida_existe = true;
 }
-void OpenGLWindow::atualizarCobrinha(Direcao dir){
-  if (verificarSeEstaViva(dir)) {
-    m_cobrinha.avancar(dir);
+void OpenGLWindow::atualizarCobrinha()
+{
+  if (verificarSeEstaViva())
+  {
+    m_cobrinha.update();
     verificarSeComeu();
-  } else {
+  }
+  else
+  {
     m_gameData.m_state = State::GameOver;
   }
 }
