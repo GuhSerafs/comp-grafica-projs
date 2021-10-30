@@ -11,6 +11,8 @@
 enum Direcao {Cima, Baixo, Esquerda, Direita};
 
 class OpenGLWindow;
+class Tabuleiro;
+class Comida;
 
 class Cobrinha
 {
@@ -30,6 +32,8 @@ public:
     bool sobreporCauda(glm::vec2 posicao_comida);
 private: 
     friend OpenGLWindow;
+    friend Tabuleiro;
+    friend Comida;
 
     // Variaveis
     Direcao direcao;

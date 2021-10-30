@@ -8,6 +8,9 @@
 #include "gamedata.hpp"
 
 class OpenGLWindow;
+class Cobrinha;
+class Comida;
+
 class Tabuleiro
 {
 public:
@@ -17,6 +20,10 @@ public:
     void update();
 
 private:
+    friend OpenGLWindow;
+    friend Cobrinha;
+    friend Comida;
+
     std::vector<glm::vec2> borda;
     std::uint8_t borda_index{0};
 
@@ -34,6 +41,7 @@ private:
                                          glm::vec3(0.00f, 0.64f, 0.91f),
                                          glm::vec3(0.00f, 0.27f, 0.39f)};
     const float m_scale{0.05f};
+    
     // Vetor de coordenadas dos vertices de um bloquinho
     const std::vector<glm::vec2> vertices{glm::vec2(-1, -1),
                                           glm::vec2(-1, 1),

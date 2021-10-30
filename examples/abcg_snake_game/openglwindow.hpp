@@ -5,9 +5,6 @@
 #include <random>
 #include "abcg.hpp"
 
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-
 #include "gamedata.hpp"
 #include "cobrinha.hpp"
 #include "tabuleiro.hpp"

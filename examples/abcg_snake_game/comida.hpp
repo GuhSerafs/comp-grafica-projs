@@ -8,6 +8,8 @@
 #include "gamedata.hpp"
 
 class OpenGLWindow;
+class Cobrinha;
+class Tabuleiro;
 
 class Comida
 {
@@ -18,7 +20,8 @@ public:
     void update(const GameData &gameData);
 private: 
     friend OpenGLWindow;
-
+    friend Cobrinha;
+    friend Tabuleiro;
     // Variaveis
     glm::vec2 m_posicao_comida{7, 7};
 
