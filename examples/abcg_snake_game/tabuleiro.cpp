@@ -100,7 +100,7 @@ void Tabuleiro::bloco(glm::vec2 pos) {
 
   // Render
   abcg::glBindVertexArray(m_vao);
-  abcg::glDrawArrays(GL_TRIANGLE_FAN, 0, 6); // 4 + 2
+  abcg::glDrawArrays(GL_TRIANGLE_FAN, 0, 5); // 4 + 1
   abcg::glBindVertexArray(0);
   abcg::glUseProgram(0);
 }

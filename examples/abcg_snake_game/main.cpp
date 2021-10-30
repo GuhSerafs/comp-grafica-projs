@@ -11,10 +11,9 @@ int main(int argc, char **argv)
 
         // Create OpenGL window
         auto window{std::make_unique<OpenGLWindow>()};
-        window->setOpenGLSettings({.samples = 4,
-                                   .preserveWebGLDrawingBuffer = true});
-        window->setWindowSettings({.width = 500,
-                                   .height = 500,
+        window->setOpenGLSettings({.samples = 4});
+        window->setWindowSettings({.width = 600,
+                                   .height = 600,
                                    .showFPS = false,
                                    .showFullscreenButton = false,
                                    .title = "Snake Game"});
