@@ -1,32 +1,14 @@
-# Prerequisites
-*.d
+# Pastas a serem ignoradas
+abcg
+build
+cmake
+.vscode
+public
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
-
-# Precompiled Headers
-*.gch
-*.pch
-
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
-
-# Fortran module files
-*.mod
-*.smod
-
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+# Arquivos a serem ignorados
+build-wasm.bat
+build-wasm.sh
+build.bat
+build.sh
+runweb.bat
+runweb.sh

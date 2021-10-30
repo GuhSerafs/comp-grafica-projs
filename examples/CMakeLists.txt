@@ -1,0 +1,8 @@
+# add_subdirectory(helloworld)
+# add_subdirectory(firstapp)
+# add_subdirectory(tictactoe)
+# add_subdirectory(sierpinski)
+add_subdirectory(abcg_snake_game)
+# add_subdirectory(coloredtriangles)
+# add_subdirectory(regularpolygons)
+# add_subdirectory(asteroids)
