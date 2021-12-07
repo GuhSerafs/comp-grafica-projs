@@ -1,22 +1,12 @@
 #ifndef OPENGLWINDOW_HPP_
 #define OPENGLWINDOW_HPP_
 
-#include <vector>
-
+#include <string_view>
 #include "abcg.hpp"
 #include "camera.hpp"
-#include "ground.hpp"
+#include "labirinto.hpp"
+#include "kart.hpp"
 #include "testarossa.hpp"
-
-// struct Vertex
-// {
-//   glm::vec3 position;
-
-//   bool operator==(const Vertex &other) const
-//   {
-//     return position == other.position;
-//   }
-// };
 
 class OpenGLWindow : public abcg::OpenGLWindow
 {
@@ -27,28 +17,29 @@ protected:
   void paintUI() override;
   void resizeGL(int width, int height) override;
   void terminateGL() override;
-  void drawBody(GLint colorLoc, int proximo, int anterior, glm::vec4 cor);
-  void drawModel(GLint colorLoc);
-  void loadModel(std::string_view path);
+  void paintModel(GLuint m_program);
 
 private:
-  GLuint m_VAO{};
-  GLuint m_VBO{};
-  GLuint m_EBO{};
-  GLuint m_program{};
+  GLuint m_testarossaProgram{};
+  GLuint m_labirintoProgram{};
+  std::vector<GLuint> m_programs{};
+  std::vector<std::string> m_programNames{"phong", "blinnphong", "texture"};
 
   int m_viewportWidth{};
   int m_viewportHeight{};
+  bool m_mostrarMenu{false};
 
-  Camera m_camera;
-  float m_dollySpeed{0.0f};
-  float m_truckSpeed{0.0f};
-  float m_panSpeed{0.0f};
-
-  Ground m_ground;
   Testarossa m_testarossa;
+  Labirinto m_labirinto;
+  Camera m_camera;
+  Kart m_kart;
 
-  void loadModelFromFile(std::string_view path);
+  // Light and material properties
+  glm::vec4 m_lightDir{6.0f, 4.0f, -2.0f, 1.0f};
+  glm::vec4 m_Ia{1.0f, 1.0f, 1.0f, 1.0f};
+  glm::vec4 m_Id{1.0f, 1.0f, 1.0f, 1.0f};
+  glm::vec4 m_Is{1.0f, 1.0f, 1.0f, 1.0f};
+
   void update();
 };
 
